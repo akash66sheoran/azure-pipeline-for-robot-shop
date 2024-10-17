@@ -21,6 +21,7 @@ jobs:
       - checkout: robot-shop-repo
 
   - job: install_terraform
+    dependsOn: checkout_repos
     steps:
       - bash: sudo apt update
-      - bash: sudo apt install terraform
+      - bash: sudo apt install terraform -y

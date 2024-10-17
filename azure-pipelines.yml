@@ -61,3 +61,23 @@ jobs:
       
       - bash: sudo apt update && sudo apt install terraform -y
         displayName: 'update apt and install Terraform'
+
+  - job: setup_eks_cluster
+    steps:
+    - task: Bash@3
+      displayName: 'terraform init'
+      inputs:
+        targetType: 'inline'
+        script: 'terraform init'
+        workingDirectory: '$(Build.SourcesDirectory)/eks-cluster-setup-terraform'
+    
+    - task: Bash@3
+      displayName: 'terraform apply'
+      env:
+        AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+        AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+        AWS_DEFAULT_REGION: $(AWS_DEFAULT_REGION)
+      inputs:
+        targetType: 'inline'
+        script: 'terraform apply --auto-approve'
+        workingDirectory: '$(Build.SourcesDirectory)/eks-cluster-setup-terraform'

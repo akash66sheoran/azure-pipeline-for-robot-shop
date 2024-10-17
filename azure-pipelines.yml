@@ -2,16 +2,16 @@ trigger: none
 
 pool: my-agent-pool
 
-# resources:
-#   repositories:
-#     - repository: eks-setup-repo
-#       type: github
-#       # endpoint: MyGitHubServiceConnection
-#       name: akash66sheoran/eks-cluster-setup-terraform
-#     - repository: robot-shop-repo
-#       type: github
-#       # endpoint: MyGitHubServiceConnection
-#       name: akash66sheoran/robot-shop
+resources:
+  repositories:
+    - repository: eks-setup-repo
+      type: github
+      endpoint: MyGitHubServiceConnection
+      name: akash66sheoran/eks-cluster-setup-terraform
+    - repository: robot-shop-repo
+      type: github
+      endpoint: MyGitHubServiceConnection
+      name: akash66sheoran/robot-shop
 
 steps:
 - bash: ls $(Agent.BuildDirectory)/s

@@ -26,7 +26,11 @@ jobs:
       - bash: ls $(Agent.BuildDirectory)/s
         displayName: 'list downloaded repos'
       
+      - bash: echo '$(Agent.BuildDirectory)'
+        displayName: 'Agent.BuildDirectory'
+      
       - bash: echo '$(Build.SourcesDirectory)'
+        displayName: 'Build.SourcesDirectory'
 
   # - job: install_terraform
   #   dependsOn: checkout_repos

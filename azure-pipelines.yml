@@ -13,6 +13,14 @@ resources:
       endpoint: robot-shop
       name: akash66sheoran/robot-shop
 
-steps:
-- checkout: eks-setup-repo
-- bash: ls $(Agent.BuildDirectory)/s
+jobs:
+  - job: checkout_repos
+    steps:
+      - checkout: self
+      - checkout: eks-setup-repo
+      - checkout: robot-shop-repo
+
+  - job: install_terraform
+    steps:
+      - bash: sudo apt update
+      - bash: sudo apt install terraform

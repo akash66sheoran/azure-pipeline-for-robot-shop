@@ -14,4 +14,7 @@ resources:
       name: akash66sheoran/robot-shop
 
 steps:
+- checkout: self
+- checkout: eks-setup-repo
+- checkout: robot-shop-repo
 - bash: ls $(Agent.BuildDirectory)/s

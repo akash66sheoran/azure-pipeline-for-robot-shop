@@ -22,6 +22,9 @@ jobs:
         displayName: 'checkout eks-cluster-setup-terraform repo'
       - checkout: robot-shop-repo
         displayName: 'checkout robot-shop repo'
+      
+      - bash: ls $(Agent.BuildDirectory)/s
+        displayName: 'list downloaded repos'
 
   - job: install_terraform
     dependsOn: checkout_repos
@@ -63,13 +66,14 @@ jobs:
         displayName: 'update apt and install Terraform'
 
   - job: setup_eks_cluster
+    dependsOn: checkout_repos
     steps:
     - task: Bash@3
       displayName: 'terraform init'
       inputs:
         targetType: 'inline'
         script: 'terraform init'
-        workingDirectory: '$(Build.SourcesDirectory)/eks-cluster-setup-terraform'
+        workingDirectory: '$(Agent.BuildDirectory)/s/eks-cluster-setup-terraform'
     
     - task: Bash@3
       displayName: 'terraform apply'
@@ -80,4 +84,5 @@ jobs:
       inputs:
         targetType: 'inline'
         script: 'terraform apply --auto-approve'
-        workingDirectory: '$(Build.SourcesDirectory)/eks-cluster-setup-terraform'
+        workingDirectory: '$(Agent.BuildDirectory)/s/eks-cluster-setup-terraform'
+        

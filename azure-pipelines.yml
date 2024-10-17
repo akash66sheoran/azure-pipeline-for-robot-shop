@@ -14,4 +14,4 @@ pool: my-agent-pool
 #       name: akash66sheoran/robot-shop
 
 steps:
-- bash: ls $(Agent.BuildDirectory)
+- bash: ls $(Agent.BuildDirectory)/s

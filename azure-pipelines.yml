@@ -6,11 +6,11 @@ resources:
   repositories:
     - repository: eks-setup-repo
       type: github
-      endpoint: MyGitHubServiceConnection
+      endpoint: robot-shop
       name: akash66sheoran/eks-cluster-setup-terraform
     - repository: robot-shop-repo
       type: github
-      endpoint: MyGitHubServiceConnection
+      endpoint: robot-shop
       name: akash66sheoran/robot-shop
 
 steps:

@@ -14,26 +14,26 @@ resources:
       name: akash66sheoran/robot-shop
 
 jobs:
-  - job: checkout_repos
-    steps:
-      - checkout: self
-        displayName: 'checkout self repo'
-      - checkout: eks-setup-repo
-        displayName: 'checkout eks-cluster-setup-terraform repo'
-      - checkout: robot-shop-repo
-        displayName: 'checkout robot-shop repo'
+  # - job: checkout_repos
+  #   steps:
+  #     - checkout: self
+  #       displayName: 'checkout self repo'
+  #     - checkout: eks-setup-repo
+  #       displayName: 'checkout eks-cluster-setup-terraform repo'
+  #     - checkout: robot-shop-repo
+  #       displayName: 'checkout robot-shop repo'
       
-      - bash: ls $(Agent.BuildDirectory)/s
-        displayName: 'list downloaded repos'
+  #     - bash: ls $(Agent.BuildDirectory)/s
+  #       displayName: 'list downloaded repos'
       
-      - bash: echo '$(Agent.BuildDirectory)'
-        displayName: 'Agent.BuildDirectory'
+  #     - bash: echo '$(Agent.BuildDirectory)'
+  #       displayName: 'Agent.BuildDirectory'
       
-      - bash: echo '$(Build.SourcesDirectory)'
-        displayName: 'Build.SourcesDirectory'
+  #     - bash: echo '$(Build.SourcesDirectory)'
+  #       displayName: 'Build.SourcesDirectory'
 
   - job: install_terraform
-    dependsOn: checkout_repos
+    # dependsOn: checkout_repos
     steps:
       - bash: sudo apt update
         displayName: 'update apt repository'
@@ -74,6 +74,9 @@ jobs:
   - job: setup_eks_cluster
     dependsOn: install_terraform
     steps:
+    - checkout: eks-setup-repo
+      displayName: 'checkout eks-cluster-setup-terraform repo'
+
     - task: Bash@3
       displayName: 'terraform init'
       inputs:
@@ -81,7 +84,7 @@ jobs:
         script: 'terraform init'
         workingDirectory: '$(Agent.BuildDirectory)/s/eks-cluster-setup-terraform'
     
-    - bash: ls $(Agent.BuildDirectory)/s/eks-cluster-setup-terraform
+    - bash: ls $(Agent.BuildDirectory)/s
     
     - task: Bash@3
       displayName: 'terraform apply'

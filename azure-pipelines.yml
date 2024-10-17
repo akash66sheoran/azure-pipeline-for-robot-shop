@@ -3,19 +3,19 @@ trigger: none
 pool:
   vmImage: ubuntu-latest
 
-resources:
-  repositories:
-    - repository: eks-setup-repo
-      type: github
-      # endpoint: MyGitHubServiceConnection
-      name: akash66sheoran/eks-cluster-setup-terraform
-    - repository: robot-shop-repo
-      type: github
-      # endpoint: MyGitHubServiceConnection
-      name: akash66sheoran/robot-shop
+# resources:
+#   repositories:
+#     - repository: eks-setup-repo
+#       type: github
+#       # endpoint: MyGitHubServiceConnection
+#       name: akash66sheoran/eks-cluster-setup-terraform
+#     - repository: robot-shop-repo
+#       type: github
+#       # endpoint: MyGitHubServiceConnection
+#       name: akash66sheoran/robot-shop
 
 jobs:
-  - job: checkout-self-repo
+  - job: checkout_repos
     steps:
     - checkout: self
     - bash: ls $(Agent.BuildDirectory)

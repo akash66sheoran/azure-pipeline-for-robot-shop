@@ -1,6 +1,7 @@
 trigger: none
 
-pool: my-agent-pool
+pool:
+  vmImage: ubuntu-latest
 
 resources:
   repositories:
@@ -12,6 +13,10 @@ resources:
       type: github
       endpoint: robot-shop
       name: akash66sheoran/robot-shop
+    - repository: tf-backend-repo
+      type: github
+      endpoint: robot-shop
+      name: akash66sheoran/remote-backend-setup-for-tf
 
 jobs:
   - job: install_terraform
@@ -52,8 +57,32 @@ jobs:
       - bash: sudo apt update && sudo apt install terraform -y
         displayName: 'update apt and install Terraform'
 
-  - job: setup_eks_cluster
+  - job: setup_tf_backend_infra
     dependsOn: install_terraform
+    steps:
+    - checkout: tf-backend-repo
+      displayName: 'checkout remote-backend-setup-for-tf repo'
+      
+    - task: Bash@3
+      displayName: 'terraform init'
+      inputs:
+        targetType: 'inline'
+        script: 'terraform init'
+        workingDirectory: '$(Build.SourcesDirectory)'
+
+    - task: Bash@3
+      displayName: 'terraform apply'
+      env:
+        AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+        AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+        AWS_DEFAULT_REGION: $(AWS_DEFAULT_REGION)
+      inputs:
+        targetType: 'inline'
+        script: 'terraform apply --auto-approve'
+        workingDirectory: '$(Build.SourcesDirectory)'
+
+  - job: setup_eks_cluster
+    dependsOn: setup_tf_backend_infra
     steps:
     - checkout: eks-setup-repo
       displayName: 'checkout eks-cluster-setup-terraform repo'
@@ -74,15 +103,4 @@ jobs:
       inputs:
         targetType: 'inline'
         script: 'terraform apply --auto-approve'
-        workingDirectory: '$(Build.SourcesDirectory)'
-
-    - task: Bash@3
-      displayName: 'terraform destroy'
-      env:
-        AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
-        AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
-        AWS_DEFAULT_REGION: $(AWS_DEFAULT_REGION)
-      inputs:
-        targetType: 'inline'
-        script: 'terraform destroy --auto-approve'
         workingDirectory: '$(Build.SourcesDirectory)'

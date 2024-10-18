@@ -68,10 +68,6 @@ jobs:
       
     - task: Bash@3
       displayName: 'terraform init'
-      env:
-        AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
-        AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
-        AWS_DEFAULT_REGION: $(AWS_DEFAULT_REGION)
       inputs:
         targetType: 'inline'
         script: 'terraform init'
@@ -96,6 +92,10 @@ jobs:
 
     - task: Bash@3
       displayName: 'terraform init'
+      env:
+        AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+        AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+        AWS_DEFAULT_REGION: $(AWS_DEFAULT_REGION)
       inputs:
         targetType: 'inline'
         script: 'terraform init'

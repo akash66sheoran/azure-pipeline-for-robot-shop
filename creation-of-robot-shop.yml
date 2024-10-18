@@ -109,5 +109,5 @@ jobs:
         AWS_DEFAULT_REGION: $(AWS_DEFAULT_REGION)
       inputs:
         targetType: 'inline'
-        script: 'terraform apply --auto-approve'
+        script: 'TF_LOG=DEBUG terraform apply --auto-approve'
         workingDirectory: '$(Build.SourcesDirectory)'

@@ -3,11 +3,44 @@ trigger: none
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+resources:
+  repositories:
+    - repository: eks-setup-repo
+      type: github
+      endpoint: robot-shop
+      name: akash66sheoran/eks-cluster-setup-terraform
+    - repository: robot-shop-repo
+      type: github
+      endpoint: robot-shop
+      name: akash66sheoran/robot-shop
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+steps:
+- checkout: eks-setup-repo
+  displayName: 'checkout eks-cluster-setup-terraform repo'
+
+- task: Bash@3
+  displayName: 'terraform init'
+  env:
+    AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+    AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+    AWS_DEFAULT_REGION: $(AWS_DEFAULT_REGION)
+  inputs:
+    targetType: 'inline'
+    script: 'terraform init'
+    workingDirectory: '$(Build.SourcesDirectory)'
+- task: Bash@3
+  displayName: 'terraform destroy'
+  env:
+    AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+    AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+    AWS_DEFAULT_REGION: $(AWS_DEFAULT_REGION)
+  inputs:
+    targetType: 'inline'
+    script: 'terraform destroy --auto-approve'
+    workingDirectory: '$(Build.SourcesDirectory)'
+
+- bash: aws s3 rb s3://robot-shop-tf-remote-backend --force
+  displayName: 'remove s3 remote backend'
+
+- bash: aws dynamodb delete-table --table-name terraform-state-lock-dynamo
+  displayName: 'remove state locking dynamodb'

@@ -41,6 +41,14 @@ steps:
 
 - bash: aws s3 rb s3://robot-shop-tf-remote-backend --force
   displayName: 'remove s3 remote backend'
+  env:
+    AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+    AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+    AWS_DEFAULT_REGION: $(AWS_DEFAULT_REGION)
 
 - bash: aws dynamodb delete-table --table-name terraform-state-lock-dynamo
   displayName: 'remove state locking dynamodb'
+  env:
+    AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+    AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+    AWS_DEFAULT_REGION: $(AWS_DEFAULT_REGION)
